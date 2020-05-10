@@ -4,6 +4,7 @@ import io.newgrounds.components.ScoreBoardComponent.Period;
 import io.newgrounds.objects.events.Response;
 import io.newgrounds.objects.events.Result;
 import io.newgrounds.objects.events.Result.ScoreResult;
+import io.newgrounds.utils.Dispatcher;
 import io.newgrounds.NGLite;
 
 @:noCompletion
@@ -24,8 +25,15 @@ class ScoreBoard extends Object<RawScoreBoardData> {
 	/** The name of the scoreboard. */
 	public var name(get, never):String;
 	inline function get_name() return _data.name;
+
+	public var onPosted:Dispatcher;
 	
-	public function new(core:NGLite, data:RawScoreBoardData):Void {super(core, data); }
+	public function new(core:NGLite, data:RawScoreBoardData):Void {
+		super(core, data);
+
+		onPosted = new Dispatcher();
+	}
+
 
 	/**
 	 * Fetches score data from the server, this removes all of the existing scores cached
@@ -65,8 +73,8 @@ class ScoreBoard extends Object<RawScoreBoardData> {
 	}
 	
 	function onScorePosted(response:Response<PostScoreResult>):Void {
-		
-		
+
+		onPosted.dispatch();
 	}
 	
 	public function toString():String {
